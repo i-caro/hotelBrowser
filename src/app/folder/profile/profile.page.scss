@@ -21,19 +21,19 @@
   }
   
   .profile-avatar {
-    width: 50px; /* Tamaño de la imagen de perfil */
-    height: 50px;
+    width: 100px; /* Tamaño de la imagen de perfil */
+    height: 100px;
     margin-right: 10px; /* Espacio entre la imagen y el texto */
   }
   
   .profile-name {
-    font-size: 18px;
+    font-size: 40px;
     font-weight: bold;
     margin: 0; /* Eliminar márgenes adicionales */
   }
   
   ion-card-subtitle {
-    font-size: 14px;
+    font-size: 20px;
     color: #666;
     margin-top: 4px; /* Reduce el espacio entre el subtítulo y el contenido */
   }
