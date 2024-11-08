@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { ProfilePage } from './folder/profile/profile.page';
+import { BookingsPage } from './folder/bookings/bookings.page';
+import { MapPage } from './folder/map/map.page';
+import { HotelsPage } from './folder/hotels/hotels.page';
 
 const routes: Routes = [
   {
@@ -8,24 +12,20 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'folder/:id',
-    loadChildren: () => import('./pages/folder/folder.module').then( m => m.FolderPageModule)
-  },
-  {
     path: 'profile',
-    loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule)
+    loadChildren: () => import('./folder/profile/profile.module').then( m => m.ProfilePageModule)
   },
   {
     path: 'hotels',
-    loadChildren: () => import('./pages/hotels/hotels.module').then( m => m.HotelsPageModule)
+    loadChildren: () => import('./folder/hotels/hotels.module').then( m => m.HotelsPageModule)
   },
   {
     path: 'bookings',
-    loadChildren: () => import('./pages/bookings/bookings.module').then( m => m.BookingsPageModule)
+    loadChildren: () => import('./folder/bookings/bookings.module').then( m => m.BookingsPageModule)
   },
   {
     path: 'map',
-    loadChildren: () => import('./pages/map/map.module').then( m => m.MapPageModule)
+    loadChildren: () => import('./folder/map/map.module').then( m => m.MapPageModule)
   }
 ];
 
