@@ -3,9 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { FolderPage } from './folder.page';
 import { ProfilePage } from './profile/profile.page';
-import { HotelsPage } from './hotels/hotels.page';
 import { BookingsPage } from './bookings/bookings.page';
 import { MapPage } from './map/map.page';
+import { ServicesPage } from './services/services.page';
+import { UsersPage } from './users/users.page';
 
 const routes: Routes = [
   {
@@ -13,12 +14,16 @@ const routes: Routes = [
     component: ProfilePage,
   },
   {
-    path: 'hotels',
-    component: HotelsPage,
+    path: 'services',
+    component: ServicesPage,
   },
   {
     path: 'bookings',
     component: BookingsPage,
+  },
+  {
+    path: 'users',
+    component: UsersPage,
   },
   {
     path: 'map',
