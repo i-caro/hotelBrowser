@@ -8,5 +8,5 @@ export interface Service{
     longitud: string;
     price: number;
     imgUrl: string;
-    available: boolean;
+    available: string;
 }

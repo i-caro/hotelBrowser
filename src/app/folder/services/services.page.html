@@ -1,13 +1,79 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>services</ion-title>
+    <ion-title>Servicios</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">services</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <!-- Botón flotante para añadir servicio -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="mostrarFormulario = !mostrarFormulario">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Formulario en una tarjeta centrada -->
+  <ion-card *ngIf="mostrarFormulario" class="formulario-card">
+    <ion-card-header>
+      <ion-card-title>Añadir Servicio</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form (ngSubmit)="agregarServicio()" [formGroup]="servicioForm">
+        <ion-item>
+          <ion-label position="floating">Nombre del Servicio</ion-label>
+          <ion-input formControlName="name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Tipo de Servicio</ion-label>
+          <ion-input formControlName="type"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-input formControlName="description"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Ubicación</ion-label>
+          <ion-input formControlName="location"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Latitud</ion-label>
+          <ion-input formControlName="latitud"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Longitud</ion-label>
+          <ion-input formControlName="longitud"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Precio</ion-label>
+          <ion-input type="number" formControlName="price"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Disponibilidad</ion-label>
+          <ion-select formControlName="available" placeholder="Selecciona una opción">
+            <ion-select-option value="disponible">Disponible</ion-select-option>
+            <ion-select-option value="reservado">Reservado</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-button expand="full" type="submit" [disabled]="servicioForm.invalid">Guardar Servicio</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Lista de Servicios -->
+  <div class="cards-container">
+    <ion-card *ngFor="let servicio of servicios" class="servicio-card">
+      <img [src]="servicio.imgUrl" alt="Imagen del Servicio" *ngIf="servicio.imgUrl">
+    <ion-card-header>
+      <ion-card-title>{{ servicio.name }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Tipo: {{ servicio.type }}</p>
+      <p>Descripción: {{ servicio.description }}</p>
+      <p>Ubicación: {{ servicio.location }}</p>
+      <p>Precio: {{ servicio.price }}</p>
+      <p>Disponibilidad: {{ servicio.available=="disponible"?"Disponible":"Reservado" }}</p>
+    </ion-card-content>
+    <ion-button color="danger" (click)="eliminarServicio(servicio.id)">Eliminar</ion-button>
+    </ion-card>
+  </div>
 </ion-content>
