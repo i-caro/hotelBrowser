@@ -1,11 +1,8 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
+    <ion-menu contentId="main-content" type="overlay" *ngIf="isAuthenticated">
       <ion-content>
         <ion-list id="inbox-list">
-          <ion-list-header>Admin</ion-list-header>
-          <ion-note>example&#64;gmail.com</ion-note>
-
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
             <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
               <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
@@ -15,6 +12,36 @@
         </ion-list>
       </ion-content>
     </ion-menu>
-    <ion-router-outlet id="main-content"></ion-router-outlet>
+
+    <ion-router-outlet id="main-content" *ngIf="isAuthenticated"></ion-router-outlet>
+
+    <div *ngIf="!isAuthenticated" class="overlay">
+      <div class="auth-card">
+        <form [formGroup]="authForm" (ngSubmit)="onAuthSubmit()">
+          <h2>{{ isRegisterMode ? 'Registro' : 'Iniciar Sesión' }}</h2>
+
+          <ion-item>
+            <ion-label position="floating">Nombre de usuario</ion-label>
+            <ion-input formControlName="username" type="text"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input formControlName="password" type="password"></ion-input>
+          </ion-item>
+
+          <ion-item *ngIf="isRegisterMode">
+            <ion-label position="floating">Correo electrónico</ion-label>
+            <ion-input formControlName="email" type="email"></ion-input>
+          </ion-item>
+
+          <ion-button expand="block" type="submit">{{ isRegisterMode ? 'Registrarse' : 'Iniciar Sesión' }}</ion-button>
+
+          <p (click)="toggleAuthMode()" class="toggle-link">
+            {{ isRegisterMode ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate' }}
+          </p>
+        </form>
+      </div>
+    </div>
   </ion-split-pane>
 </ion-app>
