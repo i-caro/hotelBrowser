@@ -1,25 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Booking } from 'src/app/model/booking.model';
+import { ServicesRepository } from 'src/app/repositories/service.repository';
 import { BookingsRepository } from 'src/app/repositories/bookings.repository';
+import { Booking } from 'src/app/model/booking.model';
+import { Service } from 'src/app/model/service.model';
+import { AuthService } from 'src/app/autenticacion/auth.service';
 
 @Component({
-  selector: 'app-reservas',
+  selector: 'app-bookings',
   templateUrl: './bookings.page.html',
   styleUrls: ['./bookings.page.scss'],
 })
 export class BookingsPage implements OnInit {
-
   mostrarFormulario = false;
-  servicioForm: FormGroup;
+  bookingForm: FormGroup;
+  availableServices: Service[] = [];
   bookings: Booking[] = [];
+  userId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private bookingsRepository: BookingsRepository
+    private servicesRepository: ServicesRepository,
+    private bookingsRepository: BookingsRepository,
+    private authService: AuthService
   ) {
-    this.servicioForm = this.fb.group({
-      id: ["", Validators.required],
+    this.bookingForm = this.fb.group({
       serviceId: ["", Validators.required], 
       userId: ["", Validators.required], 
       startDate: ["", Validators.required],
@@ -29,13 +34,50 @@ export class BookingsPage implements OnInit {
       estado: ["", Validators.required],
       totalPayed: ["", Validators.required]
     });
+    
   }
 
   async ngOnInit() {
-    await this.cargarServicios();
+    await this.cargarReservas();
+    this.servicesRepository.getAvailableServices().subscribe((services) => {
+      this.availableServices = services;
+    });
+
+    const user = this.authService.getAuthenticatedUser();
+    if (user) {
+      this.userId = user.id;
+      this.bookingForm.patchValue({ userId: this.userId });
+    }
   }
 
-  async cargarServicios() {
+  async addBooking() {
+    if (this.bookingForm.valid) {
+      const nuevaReserva: Booking = {
+        id: this.generateHexId(8),
+        ...this.bookingForm.value,
+        userId: this.authService.getAuthenticatedUser()?.id
+      };
+  
+      try {
+        await this.bookingsRepository.addReserva(nuevaReserva);
+        await this.cargarReservas();
+        this.bookingForm.reset({ serviceId: "", date: "" });
+        this.mostrarFormulario = false;
+      } catch (error) {
+        console.error("Error al agregar la reserva:", error);
+      }
+    } else {
+      console.log("Formulario inválido");
+    }
+  }
+
+  loadAvailableServices() {
+    this.servicesRepository.getAvailableServices().subscribe((services) => {
+      this.availableServices = services;
+    });
+  }
+
+  async cargarReservas() {
     try {
       this.bookings = await this.bookingsRepository.getReservas();
       console.log("Reservas cargadas:", this.bookings);
@@ -44,29 +86,9 @@ export class BookingsPage implements OnInit {
     }
   }
 
-  async agregarServicio() {
-    if (this.servicioForm.valid) {
-      const nuevaReserva: Booking = {
-        id: this.generateHexId(8),
-        ...this.servicioForm.value,
-      };
-
-      try {
-        await this.bookingsRepository.addReserva(nuevaReserva);
-        await this.cargarServicios();
-        this.servicioForm.reset({ disponibilidad: "disponible" });
-        this.mostrarFormulario = false;
-      } catch (error) {
-        console.error("Error al agregar el servicio:", error);
-      }
-    } else {
-      console.log("Formulario inválido");
-    }
-  }
-
-  async eliminarServicio(id: string) {
+  async eliminarReserva(id: string) {
     await this.bookingsRepository.deleteReserva(id);
-    this.cargarServicios();
+    this.cargarReservas();
   }
 
   generateHexId(length: number): string {

@@ -6,24 +6,31 @@ export class LocalDatabase<T> {
     constructor(dbName: string, storeName: string) {
       this.dbName = dbName;
       this.storeName = storeName;
+      this.init();
     }
   
     async init(): Promise<void> {
+      if (this.db) return; 
+    
       return new Promise<void>((resolve, reject) => {
         const request = indexedDB.open(this.dbName, 1);
-  
+    
         request.onupgradeneeded = (event) => {
           const db = (event.target as IDBOpenDBRequest).result;
-          if (!db.objectStoreNames.contains(this.storeName)) {
-            db.createObjectStore(this.storeName, { keyPath: "id" });
+
+          if (!db.objectStoreNames.contains('services')) {
+            db.createObjectStore('services', { keyPath: 'id' });
+          }
+          if (!db.objectStoreNames.contains('bookings')) {
+            db.createObjectStore('bookings', { keyPath: 'id' });
           }
         };
-  
+    
         request.onsuccess = (event) => {
           this.db = (event.target as IDBOpenDBRequest).result;
           resolve();
         };
-  
+    
         request.onerror = () => {
           reject(`Error initializing database ${this.dbName}`);
         };
@@ -31,6 +38,7 @@ export class LocalDatabase<T> {
     }
   
     async add(item: T): Promise<string> {
+      await this.init();
       return new Promise((resolve, reject) => {
         if (!this.db) {
           reject("Database is not initialized");
@@ -51,6 +59,7 @@ export class LocalDatabase<T> {
     }
   
     async getAll(): Promise<T[]> {
+      await this.init();
       return new Promise((resolve, reject) => {
         if (!this.db) {
           reject("Database is not initialized");
@@ -69,8 +78,30 @@ export class LocalDatabase<T> {
         };
       });
     }
+
+    async getById( id: string): Promise<T> {
+      await this.init();
+      return new Promise((resolve, reject) => {
+        if (!this.db) {
+          reject('Base de datos no inicializada');
+          return;
+        }
+        const transaction = this.db.transaction([this.storeName], 'readonly');
+        const store = transaction.objectStore(this.storeName);
+        const request = store.get(id);
+  
+        request.onsuccess = () => {
+          resolve(request.result as T);
+        };
+  
+        request.onerror = (error) => {
+          reject(error);
+        };
+      });
+    }
   
     async update(item: T): Promise<void> {
+      await this.init();
       return new Promise((resolve, reject) => {
         if (!this.db) {
           reject("Database is not initialized");
@@ -91,6 +122,7 @@ export class LocalDatabase<T> {
     }
   
     async delete(id: string): Promise<void> {
+      await this.init();
       return new Promise((resolve, reject) => {
         if (!this.db) {
           reject("Database is not initialized");

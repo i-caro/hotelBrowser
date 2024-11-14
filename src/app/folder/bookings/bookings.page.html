@@ -4,20 +4,86 @@
   </ion-toolbar>
 </ion-header>
 
-<div class="cards-container">
-  <ion-card *ngFor="let reserva of bookings" class="reserva-card">
-  <ion-card-header>
-    <ion-card-title>{{ reserva.userId }}</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    <p>Servicio: {{ reserva.serviceId }}</p>
-    <p>Fecha de inicio: {{ reserva.startDate }}</p>
-    <p>Fecha de finalización: {{ reserva.endDate }}</p>
-    <p>Personas: {{ reserva.peopleAmount }}</p>
-    <p>Preferencias: {{ reserva.preferences }}</p>
-    <p>Estado: {{ reserva.estado }}</p>
-    <p>Precio pagado: {{ reserva.totalPayed }}</p>
-  </ion-card-content>
-  <ion-button color="danger" (click)="eliminarServicio(reserva.id)">Eliminar</ion-button>
+<ion-content class="ion-padding">
+  <!-- Botón flotante para mostrar el formulario -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="mostrarFormulario = !mostrarFormulario">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Tarjeta con el Formulario de Reserva -->
+  <ion-card *ngIf="mostrarFormulario" class="reserva-form-card">
+    <ion-card-header>
+      <ion-card-title>Crear Nueva Reserva</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form [formGroup]="bookingForm" (ngSubmit)="addBooking()">
+        <ion-item>
+          <ion-label position="floating">Servicio</ion-label>
+          <ion-select formControlName="serviceId">
+            <ion-select-option *ngFor="let service of availableServices" [value]="service.id">
+              {{ service.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <input type="hidden" formControlName="userId">
+
+        <ion-item>
+          <ion-label position="floating">Fecha de inicio (DD/MM/YYYY)</ion-label>
+          <ion-input formControlName="startDate"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Fecha de final (DD/MM/YYYY)</ion-label>
+          <ion-input formControlName="endDate"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Cantidad de personas</ion-label>
+          <ion-input type="number" formControlName="peopleAmount"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Preferencias</ion-label>
+          <ion-input formControlName="preferences"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Estado</ion-label>
+          <ion-select formControlName="estado" placeholder="Selecciona una opción">
+            <ion-select-option value="pagado">Pagado</ion-select-option>
+            <ion-select-option value="pendiente">Pendiente de cobro</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Total</ion-label>
+          <ion-input type="number" formControlName="totalPayed"></ion-input>
+        </ion-item>
+
+        <ion-button expand="full" type="submit" [disabled]="bookingForm.invalid">Guardar Reserva</ion-button>
+      </form>
+    </ion-card-content>
   </ion-card>
-</div>
+
+    <div class="cards-container">
+      <ion-card *ngFor="let reserva of bookings" class="reserva-card">
+      <ion-card-header>
+        <ion-card-title>Usuario con ID: {{ reserva.userId }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Servicio con ID: {{ reserva.serviceId }}</p>
+        <p>Fecha de inicio: {{ reserva.startDate }}</p>
+        <p>Fecha de finalización: {{ reserva.endDate }}</p>
+        <p>Personas: {{ reserva.peopleAmount }}</p>
+        <p>Preferencias: {{ reserva.preferences }}</p>
+        <p>Estado: {{ reserva.estado }}</p>
+        <p>Precio pagado: {{ reserva.totalPayed }}</p>
+      </ion-card-content>
+      <ion-button color="danger" (click)="eliminarReserva(reserva.id)">Eliminar</ion-button>
+      </ion-card>
+    </div>
+  </ion-content>

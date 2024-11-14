@@ -11,21 +11,25 @@ export class AuthService {
 
   constructor() {}
 
+
   register(username: string, password: string, email: string): boolean {
     const users = this.getUsers();
     if (users[username]) {
-      return false;
+      return false; 
     }
-    users[username] = { password, email };
+    const userId = this.generateHexId(8); 
+    users[username] = { id: userId, password, email };
     this.saveUsers(users);
     return true;
   }
 
+
   login(username: string, password: string): boolean {
     const users = this.getUsers();
     if (users[username] && users[username].password === password) {
-      localStorage.setItem(this.LOGGED_IN_USER_KEY, JSON.stringify({ username, email: users[username].email }));
-      this.authStatus.next(true);
+      const userData = { id: users[username].id, username, email: users[username].email };
+      localStorage.setItem(this.LOGGED_IN_USER_KEY, JSON.stringify(userData));
+      this.authStatus.next(true); 
       return true;
     }
     return false;
@@ -40,16 +44,25 @@ export class AuthService {
     return !!localStorage.getItem(this.LOGGED_IN_USER_KEY);
   }
 
-  getAuthenticatedUser(): { username: string; email: string } | null {
+  getAuthenticatedUser(): { id: string; username: string; email: string } | null {
     const user = localStorage.getItem(this.LOGGED_IN_USER_KEY);
     return user ? JSON.parse(user) : null;
   }
 
-  private getUsers(): { [username: string]: { password: string; email: string } } {
+  private generateHexId(length: number): string {
+    const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  }
+
+  private getUsers(): { [username: string]: { id: string; password: string; email: string } } {
     return JSON.parse(localStorage.getItem(this.USERS_KEY) || '{}');
   }
 
-  private saveUsers(users: { [username: string]: { password: string; email: string } }): void {
+  private saveUsers(users: { [username: string]: { id: string; password: string; email: string } }): void {
     localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
   }
 }
