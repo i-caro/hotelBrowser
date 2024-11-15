@@ -1,13 +1,22 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>map</ion-title>
+    <ion-title>Mapa de Servicios</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">map</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="map-container">
+    <google-map
+      height="100%"
+      width="100%"
+      [zoom]="zoom"
+      [center]="center"
+    >
+      <map-marker
+        *ngFor="let marker of markers"
+        [position]="marker.position"
+        [label]="marker.label"
+      ></map-marker>
+    </google-map>
+  </div>
 </ion-content>

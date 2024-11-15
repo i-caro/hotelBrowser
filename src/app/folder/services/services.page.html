@@ -36,14 +36,6 @@
           <ion-input formControlName="location"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Latitud</ion-label>
-          <ion-input formControlName="latitud"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Longitud</ion-label>
-          <ion-input formControlName="longitud"></ion-input>
-        </ion-item>
-        <ion-item>
           <ion-label position="floating">Precio</ion-label>
           <ion-input type="number" formControlName="price"></ion-input>
         </ion-item>
@@ -72,6 +64,7 @@
       <p>Ubicación: {{ servicio.location }}</p>
       <p>Precio: {{ servicio.price }}</p>
       <p>Disponibilidad: {{ servicio.available=="disponible"?"Disponible":"Reservado" }}</p>
+      <p>ID: {{ servicio.id }}</p>
     </ion-card-content>
     <ion-button color="danger" (click)="eliminarServicio(servicio.id)">Eliminar</ion-button>
     </ion-card>

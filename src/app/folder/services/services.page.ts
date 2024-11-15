@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Service } from 'src/app/model/service.model';
 import { ServicesRepository } from 'src/app/repositories/service.repository';
+import { GeocodingService } from './geocoding.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-servicios',
@@ -15,15 +17,14 @@ export class ServicesPage implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private serviciosRepository: ServicesRepository
+    private serviciosRepository: ServicesRepository,
+    private geocodingService: GeocodingService
   ) {
     this.servicioForm = this.fb.group({
       name: ["", Validators.required],
       type: ["", Validators.required],
       description: [""],
       location: [""],
-      latitud: [""],
-      longitud: [""],
       price: [0, Validators.required],
       available: ["disponible", Validators.required],
     });
@@ -48,17 +49,28 @@ export class ServicesPage implements OnInit {
         id: this.generateHexId(8),
         ...this.servicioForm.value,
       };
-
+  
       try {
+        const coords = await lastValueFrom(this.geocodingService.getCoordinates(nuevoServicio.location));
+  
+        nuevoServicio.latitud = coords.lat;
+        nuevoServicio.longitud = coords.lng;
+  
         await this.serviciosRepository.addService(nuevoServicio);
+        
         await this.cargarServicios();
-        this.servicioForm.reset({ disponibilidad: "disponible" });
+        
+        this.servicioForm.reset({ disponibilidad: 'disponible' });
         this.mostrarFormulario = false;
+  
+        console.log("Servicio agregado con éxito:", nuevoServicio);
       } catch (error) {
         console.error("Error al agregar el servicio:", error);
+        alert("Hubo un problema al obtener las coordenadas o guardar el servicio.");
       }
     } else {
       console.log("Formulario inválido");
+      alert("Por favor, completa todos los campos obligatorios.");
     }
   }
 

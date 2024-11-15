@@ -9,6 +9,7 @@ import { UsersRepository } from '../repositories/users.repository';
 export class AuthService {
   private readonly USERS_KEY = 'app_users';
   private readonly LOGGED_IN_USER_KEY = 'logged_in_user';
+  private readonly TOKEN_KEY = 'auth_token';
   public authStatus = new BehaviorSubject<boolean>(this.isLoggedIn());
 
   constructor(private usersRepository: UsersRepository) {
@@ -57,7 +58,9 @@ export class AuthService {
       const user = users.find((u) => u.name === username && u.password === password);
   
       if (user) {
+        const token = this.generateHexId(16)
         localStorage.setItem(this.LOGGED_IN_USER_KEY, JSON.stringify(user));
+        localStorage.setItem(this.TOKEN_KEY, token)
         this.authStatus.next(true);
         return true;
       }
@@ -71,11 +74,13 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.LOGGED_IN_USER_KEY);
+    localStorage.removeItem(this.TOKEN_KEY)
     this.authStatus.next(false);
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem(this.LOGGED_IN_USER_KEY);
+    const token = localStorage.getItem(this.TOKEN_KEY)
+    return !!token
   }
 
   async getAuthenticatedUser(): Promise<{ id: string; username: string; email: string } | null> {
@@ -106,13 +111,5 @@ export class AuthService {
       result += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     return result;
-  }
-
-  private getUsers(): { [username: string]: { id: string; password: string; email: string } } {
-    return JSON.parse(localStorage.getItem(this.USERS_KEY) || '{}');
-  }
-
-  private saveUsers(users: { [username: string]: { id: string; password: string; email: string } }): void {
-    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
   }
 }

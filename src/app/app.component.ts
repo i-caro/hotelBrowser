@@ -32,8 +32,8 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.authForm = this.fb.group({
-      username: ['', Validators.required],
-      surname: ['', Validators.required],
+      username: ['', Validators.required, Validators.min(3)],
+      surname: ['', Validators.required, Validators.min(3)],
       password: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
         this.userName = user?.username || '';
         this.userEmail = user?.email || '';
       } else {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/folder']);
       }
     });
   });
@@ -69,7 +69,6 @@ export class AppComponent implements OnInit {
     if (this.isRegisterMode) {
       const success = await this.authService.register(username, surname, password, email, phone, imgUrl);
       if (success) {
-        alert('Registro exitoso');
         this.isRegisterMode = false;
         this.authForm.reset();
       } else {
@@ -83,6 +82,7 @@ export class AppComponent implements OnInit {
           const user = await this.authService.getAuthenticatedUser();
           this.userName = user?.username || '';
           this.userEmail = user?.email || '';
+          location.reload();
         });
         this.router.navigate(['/folder']);
       } else {

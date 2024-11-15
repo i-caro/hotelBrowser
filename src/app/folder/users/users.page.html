@@ -20,7 +20,9 @@
             <p><strong>Email:</strong> {{ user.email }}</p>
             <p><strong>Contraseña:</strong> {{ user.password }}</p>
             <p><strong>Teléfono:</strong> {{ user.phone }}</p>
+            <p><strong>ID:</strong> {{ user.id }}</p>
           </ion-card-content>
+          <ion-button color="danger" expand="block" (click)="eliminarUsuario(user.id)">Eliminar Usuario</ion-button>
         </ion-card>
       </ion-col>
     </ion-row>

@@ -4,8 +4,8 @@ export interface Service{
     type: string;
     description: string;
     location: string;
-    latitud: string;
-    longitud: string;
+    latitud?: number;
+    longitud?: number;
     price: number;
     imgUrl: string;
     available: string;
