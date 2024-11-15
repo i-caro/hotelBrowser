@@ -30,53 +30,61 @@ export class AppComponent implements OnInit {
     private ngZone: NgZone
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.authForm = this.fb.group({
       username: ['', Validators.required],
+      surname: ['', Validators.required],
       password: ['', Validators.required],
-      email: ['', Validators.email]
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', Validators.required],
     });
+
 
     this.isAuthenticated = this.authService.isLoggedIn();
-    if (this.isAuthenticated) {
-      const user = this.authService.getAuthenticatedUser();
-      this.userName = user?.username || '';
-      this.userEmail = user?.email || '';
-    }
-
-    this.authService.authStatus.subscribe((isAuthenticated) => {
-      this.ngZone.run(() => {
-        this.isAuthenticated = isAuthenticated;
-        if (isAuthenticated) {
-          const user = this.authService.getAuthenticatedUser();
-          this.userName = user?.username || '';
-          this.userEmail = user?.email || '';
-        } else {
-          this.router.navigate(['/login']);
-        }
-      });
-    });
+  if (this.isAuthenticated) {
+    const user = await this.authService.getAuthenticatedUser();
+    this.userName = user?.username || '';
+    this.userEmail = user?.email || '';
   }
 
-  onAuthSubmit() {
-    const { username, password, email } = this.authForm.value;
 
+  this.authService.authStatus.subscribe(async (isAuthenticated) => {
+    this.ngZone.run(async () => {
+      this.isAuthenticated = isAuthenticated;
+      if (isAuthenticated) {
+        const user = await this.authService.getAuthenticatedUser();
+        this.userName = user?.username || '';
+        this.userEmail = user?.email || '';
+      } else {
+        this.router.navigate(['/login']);
+      }
+    });
+  });
+  }
+
+  async onAuthSubmit() {
+    const { username, surname, password, email, phone } = this.authForm.value;
+    const imgUrl = 'assets/default-user.png';
+  
     if (this.isRegisterMode) {
-      if (this.authService.register(username, password, email)) {
+      const success = await this.authService.register(username, surname, password, email, phone, imgUrl);
+      if (success) {
         alert('Registro exitoso');
         this.isRegisterMode = false;
         this.authForm.reset();
       } else {
-        alert('El usuario ya existe');
+        alert('El usuario ya existe o hubo un error');
       }
     } else {
-      if (this.authService.login(username, password)) {
-        this.ngZone.run(() => {
+      const success = await this.authService.login(username, password);
+      if (success) {
+        this.ngZone.run(async () => {
           this.isAuthenticated = true;
-          const user = this.authService.getAuthenticatedUser();
+          const user = await this.authService.getAuthenticatedUser();
           this.userName = user?.username || '';
           this.userEmail = user?.email || '';
-        });this.router.navigate(['/folder']);
+        });
+        this.router.navigate(['/folder']);
       } else {
         alert('Credenciales incorrectas');
       }
@@ -85,5 +93,6 @@ export class AppComponent implements OnInit {
 
   toggleAuthMode() {
     this.isRegisterMode = !this.isRegisterMode;
+    this.authForm.reset();
   }
 }

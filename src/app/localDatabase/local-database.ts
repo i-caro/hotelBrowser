@@ -18,6 +18,9 @@ export class LocalDatabase<T> {
         request.onupgradeneeded = (event) => {
           const db = (event.target as IDBOpenDBRequest).result;
 
+          if (!db.objectStoreNames.contains('users')) {
+            db.createObjectStore('users', { keyPath: 'id' });
+          }
           if (!db.objectStoreNames.contains('services')) {
             db.createObjectStore('services', { keyPath: 'id' });
           }

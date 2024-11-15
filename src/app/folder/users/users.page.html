@@ -1,13 +1,28 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>users</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Usuarios Registrados</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">users</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6" *ngFor="let user of users">
+        <ion-card>
+          <ion-card-header>
+            <ion-avatar slot="start">
+              <img [src]="user.imgUrl || 'assets/default-user.png'" alt="User Image">
+            </ion-avatar>
+            <ion-card-title>{{ user.name }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Apellidos:</strong> {{ user.surname }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Contraseña:</strong> {{ user.password }}</p>
+            <p><strong>Teléfono:</strong> {{ user.phone }}</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

@@ -1,28 +1,38 @@
 import { Injectable } from '@angular/core';
-import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { Observable } from 'rxjs';
+import { LocalDatabase } from '../localDatabase/local-database';
 import { User } from '../model/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersRepository {
+  private db: LocalDatabase<User>;
+  private initialized: Promise<void>;
 
-  constructor(private dbService: NgxIndexedDBService) {}
-
-  addUser(user: User){
-    this.dbService.add('users', user);
+  constructor() {
+    this.db = new LocalDatabase<User>('AppDB', 'users');
+    this.initialized = this.db.init();
   }
 
-  getUsers(): Observable<User[]> {
-    return this.dbService.getAll('users');
+
+  async addUsuario(usuario: User): Promise<string> {
+    await this.initialized;
+    return this.db.add(usuario);
   }
 
-  updateUser(user: User): Observable<User> {
-    return this.dbService.update('users', user);
+
+  async getUsuarios(): Promise<User[]> {
+    await this.initialized;
+    return this.db.getAll();
   }
 
-  deleteUser(id: string): Observable<User[]> {
-    return this.dbService.delete('users', id);
+  async updateUsuario(usuario: User): Promise<void> {
+    await this.initialized;
+    return this.db.update(usuario);
+  }
+
+  async deleteUsuario(id: string): Promise<void> {
+    await this.initialized;
+    return this.db.delete(id);
   }
 }

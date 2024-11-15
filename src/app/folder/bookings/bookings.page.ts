@@ -43,7 +43,7 @@ export class BookingsPage implements OnInit {
       this.availableServices = services;
     });
 
-    const user = this.authService.getAuthenticatedUser();
+    const user = await this.authService.getAuthenticatedUser();
     if (user) {
       this.userId = user.id;
       this.bookingForm.patchValue({ userId: this.userId });
@@ -51,11 +51,12 @@ export class BookingsPage implements OnInit {
   }
 
   async addBooking() {
+    const user = await this.authService.getAuthenticatedUser();
     if (this.bookingForm.valid) {
       const nuevaReserva: Booking = {
         id: this.generateHexId(8),
         ...this.bookingForm.value,
-        userId: this.authService.getAuthenticatedUser()?.id
+        userId: user?.id
       };
   
       try {

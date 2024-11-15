@@ -12,8 +12,8 @@ export class ProfilePage implements OnInit {
 
   constructor(private authService: AuthService) {}
 
-  ngOnInit() {
-    const user = this.authService.getAuthenticatedUser();
+  async ngOnInit() {
+    const user = await this.authService.getAuthenticatedUser();
     if (user) {
       this.userName = user.username;
       this.userEmail = user.email;

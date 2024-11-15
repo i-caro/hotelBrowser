@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/model/user.model';
+import { UsersRepository } from 'src/app/repositories/users.repository';
 
 @Component({
   selector: 'app-users',
@@ -6,10 +8,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./users.page.scss'],
 })
 export class UsersPage implements OnInit {
+  users: User[] = [];
 
-  constructor() { }
+  constructor(private usersRepository: UsersRepository) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.users = await this.usersRepository.getUsuarios();
   }
-
 }
