@@ -39,6 +39,11 @@ export class ServicesRepository {
 
   async addService(service: Service): Promise<void> {
     const payload = mapLocalToRemoteService(service);
+
+    const existingService = await this.db.getById(service.id);
+    if (!existingService) {
+      await this.db.add(service);
+    }
   
     try {
       await lastValueFrom(this.apiModel.add(payload, this.type));
@@ -66,7 +71,7 @@ export class ServicesRepository {
     const payload = mapLocalToRemoteService(service);
 
     try {
-      const response = await lastValueFrom(this.apiModel.findByCustomId(this.type, service.id));
+      const response = await lastValueFrom(this.apiModel.getById(this.type, service.id));
       const strapiId = response.data[0]?.id;
       if (strapiId) {
         await lastValueFrom(this.apiModel.update(strapiId, payload, this.type));
@@ -79,7 +84,7 @@ export class ServicesRepository {
   }
   async deleteService(id: string): Promise<void> {
     try {
-      const response = await lastValueFrom(this.apiModel.findByCustomId(this.type, id));
+      const response = await lastValueFrom(this.apiModel.getById(this.type, id));
       const strapiId = response.data[0]?.id;
       if (strapiId) {
         await lastValueFrom(this.apiModel.delete(strapiId, this.type));
@@ -89,5 +94,18 @@ export class ServicesRepository {
     }
   
     await this.db.delete(id);
+  }
+
+  async getRemoteServices(): Promise<any[]> {
+    const remoteResponse = await lastValueFrom(this.apiModel.getAll('services'));
+    return remoteResponse.data;
+  }
+
+  async getLocalServices(): Promise<Service[]> {
+    return this.db.getAll();
+  }
+
+  async addLocalService(service: Service) {
+    this.db.add(service);
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from './autenticacion/auth.service';
+import { SyncService } from './strapi/sync.service';
 
 @Component({
   selector: 'app-root',
@@ -27,10 +28,12 @@ export class AppComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private syncService: SyncService
   ) {}
 
   async ngOnInit() {
+    await this.syncService.syncServices();
     this.authForm = this.fb.group({
       username: ['', Validators.required, Validators.min(3)],
       surname: ['', Validators.required, Validators.min(3)],

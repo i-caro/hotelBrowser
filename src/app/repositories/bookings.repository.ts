@@ -24,6 +24,11 @@ export class BookingsRepository {
   async addReserva(booking: Booking): Promise<void> {
     const payload = mapLocalToRemoteBooking(booking);
 
+    const existingBooking = await this.db.getById(booking.id);
+    if (!existingBooking) {
+      await this.db.add(booking);
+    }
+
     try {
       await lastValueFrom(this.apiModel.add(payload, this.type));
     } catch (error) {
@@ -49,7 +54,7 @@ export class BookingsRepository {
     const payload = mapLocalToRemoteBooking(booking);
 
     try {
-      const response = await lastValueFrom(this.apiModel.findByCustomId(this.type, booking.id));
+      const response = await lastValueFrom(this.apiModel.getById(this.type, booking.id));
       const strapiId = response.data[0]?.id;
       if (strapiId) {
         await lastValueFrom(this.apiModel.update(strapiId, payload, this.type));
@@ -63,7 +68,7 @@ export class BookingsRepository {
 
   async deleteReserva(id: string): Promise<void> {
     try {
-      const response = await lastValueFrom(this.apiModel.findByCustomId(this.type, id));
+      const response = await lastValueFrom(this.apiModel.getById(this.type, id));
       const strapiId = response.data[0]?.id;
       if (strapiId) {
         await lastValueFrom(this.apiModel.delete(strapiId, this.type));
@@ -73,5 +78,18 @@ export class BookingsRepository {
     }
 
     await this.db.delete(id);
+  }
+
+  async getRemoteBookings(): Promise<any[]> {
+    const remoteResponse = await this.apiModel.getAll('bookings').toPromise();
+    return remoteResponse.data;
+  }
+  
+  async getLocalBookings(): Promise<Booking[]> {
+    return this.db.getAll();
+  }
+  
+  async addLocalBooking(booking: Booking) {
+    this.db.add(booking);
   }
 }

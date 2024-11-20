@@ -15,7 +15,7 @@ export class ApiModel<T> {
   }
 
   getById(id: string, type: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/api/${type}/${id}?`);
+    return this.http.get<any>(`${this.baseUrl}/api/${type}/${id}`);
   }
 
   add(model: { data: T }, type: string): Observable<any> {
@@ -28,8 +28,5 @@ export class ApiModel<T> {
 
   delete(id: string, type: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/api/${type}/${id}`);
-  }
-  findByCustomId(type: string, customId: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/api/${type}?filters[id][$eq]=${customId}`);
   }
 }

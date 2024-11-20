@@ -24,6 +24,11 @@ export class UsersRepository {
   async addUsuario(user: User): Promise<void> {
     const payload = mapLocalToRemoteUser(user);
 
+    const existingUser = await this.db.getById(user.id);
+    if (!existingUser) {
+      await this.db.add(user);
+    }
+
     try {
       await lastValueFrom(this.apiModel.add(payload, this.type));
     } catch (error) {
@@ -49,7 +54,7 @@ export class UsersRepository {
     const payload = mapLocalToRemoteUser(user);
 
     try {
-      const response = await lastValueFrom(this.apiModel.findByCustomId(this.type, user.id));
+      const response = await lastValueFrom(this.apiModel.getById(this.type, user.id));
       const strapiId = response.data[0]?.id;
       if (strapiId) {
         await lastValueFrom(this.apiModel.update(strapiId, payload, this.type));
@@ -63,7 +68,7 @@ export class UsersRepository {
 
   async deleteUsuario(id: string): Promise<void> {
     try {
-      const response = await lastValueFrom(this.apiModel.findByCustomId(this.type, id));
+      const response = await lastValueFrom(this.apiModel.getById(this.type, id));
       const strapiId = response.data[0]?.id;
       if (strapiId) {
         await lastValueFrom(this.apiModel.delete(strapiId, this.type));
@@ -73,5 +78,18 @@ export class UsersRepository {
     }
 
     await this.db.delete(id);
+  }
+
+  async getRemoteUsers(): Promise<any[]> {
+    const remoteResponse = await this.apiModel.getAll('usuarios').toPromise();
+    return remoteResponse.data;
+  }
+  
+  async getLocalUsers(): Promise<User[]> {
+    return this.db.getAll();
+  }
+  
+  async addLocalUser(user: User) {
+   this.db.add(user);
   }
 }
