@@ -18,7 +18,8 @@ export class ServicesRepository {
   constructor(private http: HttpClient) {
     this.db = new LocalDatabase<Service>('AppDB', 'services');
     this.initialized = this.db.init();
-    this.apiModel = new ApiModel<Service>(http)
+    this.apiModel = new ApiModel<Service>(http);
+    this.syncWithRemote();
   }
 
   getAvailableServices(): Observable<Service[]> {
@@ -36,14 +37,20 @@ export class ServicesRepository {
     );
   }
 
+  async syncWithRemote(): Promise<void> {
+    try {
+        const remoteData = await lastValueFrom(this.apiModel.getAll(this.type));
+        const formattedData = remoteData.data.map((remote: any) => mapRemoteToLocalService(remote));
+        await this.db.insertAll(formattedData);
+        console.log(`Database synchronized with remote data for ${this.type}`);
+    } catch (error) {
+        console.error("Error synchronizing with remote data:", error);
+    }
+  }
+
 
   async addService(service: Service): Promise<void> {
     const payload = mapLocalToRemoteService(service);
-
-    const existingService = await this.db.getById(service.id);
-    if (!existingService) {
-      await this.db.add(service);
-    }
   
     try {
       await lastValueFrom(this.apiModel.add(payload, this.type));
@@ -94,18 +101,5 @@ export class ServicesRepository {
     }
   
     await this.db.delete(id);
-  }
-
-  async getRemoteServices(): Promise<any[]> {
-    const remoteResponse = await lastValueFrom(this.apiModel.getAll('services'));
-    return remoteResponse.data;
-  }
-
-  async getLocalServices(): Promise<Service[]> {
-    return this.db.getAll();
-  }
-
-  async addLocalService(service: Service) {
-    this.db.add(service);
   }
 }

@@ -19,15 +19,28 @@ export class UsersRepository {
     this.db = new LocalDatabase<User>('AppDB', 'users');
     this.initialized = this.db.init();
     this.apiModel = new ApiModel<User>(http);
+    this.syncWithRemote();
   }
+
+  async syncWithRemote(): Promise<void> {
+    try {
+        const remoteResponse = await lastValueFrom(this.apiModel.getAll(this.type));
+        
+        if (!remoteResponse || !remoteResponse.data) {
+            console.warn("No remote data found to sync.");
+            return;
+        }
+        const formattedData = remoteResponse.data.map((remote: any) => mapRemoteToLocalUser(remote));
+        await this.db.insertAll(formattedData);
+
+        console.log(`Synchronized ${formattedData.length} records with the local database.`);
+    } catch (error) {
+        console.error("Error synchronizing with remote data:", error);
+    }
+}
 
   async addUsuario(user: User): Promise<void> {
     const payload = mapLocalToRemoteUser(user);
-
-    const existingUser = await this.db.getById(user.id);
-    if (!existingUser) {
-      await this.db.add(user);
-    }
 
     try {
       await lastValueFrom(this.apiModel.add(payload, this.type));
@@ -80,16 +93,4 @@ export class UsersRepository {
     await this.db.delete(id);
   }
 
-  async getRemoteUsers(): Promise<any[]> {
-    const remoteResponse = await this.apiModel.getAll('usuarios').toPromise();
-    return remoteResponse.data;
-  }
-  
-  async getLocalUsers(): Promise<User[]> {
-    return this.db.getAll();
-  }
-  
-  async addLocalUser(user: User) {
-   this.db.add(user);
-  }
 }

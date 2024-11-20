@@ -19,15 +19,22 @@ export class BookingsRepository {
     this.db = new LocalDatabase<Booking>('AppDB', 'bookings');
     this.initialized = this.db.init();
     this.apiModel = new ApiModel<Booking>(http);
+    this.syncWithRemote();
+  }
+
+  async syncWithRemote(): Promise<void> {
+    try {
+        const remoteData = await lastValueFrom(this.apiModel.getAll(this.type));
+        const formattedData = remoteData.data.map((remote: any) => mapRemoteToLocalBooking(remote));
+        await this.db.insertAll(formattedData);
+        console.log(`Database synchronized with remote data for ${this.type}`);
+    } catch (error) {
+        console.error("Error synchronizing with remote data:", error);
+    }
   }
 
   async addReserva(booking: Booking): Promise<void> {
     const payload = mapLocalToRemoteBooking(booking);
-
-    const existingBooking = await this.db.getById(booking.id);
-    if (!existingBooking) {
-      await this.db.add(booking);
-    }
 
     try {
       await lastValueFrom(this.apiModel.add(payload, this.type));
@@ -78,18 +85,5 @@ export class BookingsRepository {
     }
 
     await this.db.delete(id);
-  }
-
-  async getRemoteBookings(): Promise<any[]> {
-    const remoteResponse = await this.apiModel.getAll('bookings').toPromise();
-    return remoteResponse.data;
-  }
-  
-  async getLocalBookings(): Promise<Booking[]> {
-    return this.db.getAll();
-  }
-  
-  async addLocalBooking(booking: Booking) {
-    this.db.add(booking);
   }
 }

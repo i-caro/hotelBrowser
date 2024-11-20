@@ -29,7 +29,7 @@ export class LocalDatabase<T> {
           }
         };
     
-        request.onsuccess = (event) => {
+        request.onsuccess = async (event) => {
           this.db = (event.target as IDBOpenDBRequest).result;
           resolve();
         };
@@ -144,6 +144,26 @@ export class LocalDatabase<T> {
         };
       });
     }
+
+    async insertAll(items: T[]): Promise<void> {
+      await this.init();
+      return new Promise((resolve, reject) => {
+          if (!this.db) {
+              reject("Database is not initialized");
+              return;
+          }
+  
+          const transaction = this.db.transaction(this.storeName, "readwrite");
+          const store = transaction.objectStore(this.storeName);
+  
+          items.forEach(item => {
+              store.put(item);
+          });
+  
+          transaction.oncomplete = () => resolve();
+          transaction.onerror = () => reject("Error inserting items into the database");
+      });
+  }
 
     async addUser(user: T): Promise<void> {
       await this.init();
