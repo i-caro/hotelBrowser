@@ -3,7 +3,7 @@ import { Booking } from '../model/booking.model';
 export const mapRemoteToLocalBooking = (remoteData: any): Booking => {
   const attributes = remoteData.attributes || {};
   return {
-    id: '',
+    id: remoteData.id,
     serviceId: attributes.serviceId || '',
     userId: attributes.userId || '',
     startDate: attributes.startDate || '',

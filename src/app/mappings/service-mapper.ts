@@ -3,7 +3,7 @@ import { Service } from '../model/service.model';
 export const mapRemoteToLocalService = (remoteData: any): Service => {
   const attributes = remoteData.attributes || {};
   return {
-    id:'',
+    id: remoteData.id,
     name: attributes.name || '',
     type: attributes.type || '',
     description: attributes.description || '',

@@ -46,7 +46,6 @@ export class ServicesPage implements OnInit {
   async agregarServicio() {
     if (this.servicioForm.valid) {
       const nuevoServicio: Service = {
-        id: this.generateHexId(8),
         ...this.servicioForm.value,
       };
   
@@ -77,14 +76,5 @@ export class ServicesPage implements OnInit {
   async eliminarServicio(id: string) {
     await this.serviciosRepository.deleteService(id);
     this.cargarServicios();
-  }
-
-  generateHexId(length: number): string {
-    const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
   }
 }

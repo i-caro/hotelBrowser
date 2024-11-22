@@ -19,25 +19,7 @@ export class UsersRepository {
     this.db = new LocalDatabase<User>('AppDB', 'users');
     this.initialized = this.db.init();
     this.apiModel = new ApiModel<User>(http);
-    this.syncWithRemote();
   }
-
-  async syncWithRemote(): Promise<void> {
-    try {
-        const remoteResponse = await lastValueFrom(this.apiModel.getAll(this.type));
-        
-        if (!remoteResponse || !remoteResponse.data) {
-            console.warn("No remote data found to sync.");
-            return;
-        }
-        const formattedData = remoteResponse.data.map((remote: any) => mapRemoteToLocalUser(remote));
-        await this.db.insertAll(formattedData);
-
-        console.log(`Synchronized ${formattedData.length} records with the local database.`);
-    } catch (error) {
-        console.error("Error synchronizing with remote data:", error);
-    }
-}
 
   async addUsuario(user: User): Promise<void> {
     const payload = mapLocalToRemoteUser(user);
@@ -67,11 +49,7 @@ export class UsersRepository {
     const payload = mapLocalToRemoteUser(user);
 
     try {
-      const response = await lastValueFrom(this.apiModel.getById(this.type, user.id));
-      const strapiId = response.data[0]?.id;
-      if (strapiId) {
-        await lastValueFrom(this.apiModel.update(strapiId, payload, this.type));
-      }
+        await lastValueFrom(this.apiModel.update(user.id, payload, this.type));
     } catch (error) {
       console.error('Error al actualizar el usuario remotamente:', error);
     }
@@ -81,11 +59,7 @@ export class UsersRepository {
 
   async deleteUsuario(id: string): Promise<void> {
     try {
-      const response = await lastValueFrom(this.apiModel.getById(this.type, id));
-      const strapiId = response.data[0]?.id;
-      if (strapiId) {
-        await lastValueFrom(this.apiModel.delete(strapiId, this.type));
-      }
+        await lastValueFrom(this.apiModel.delete(id, this.type));
     } catch (error) {
       console.error('Error al eliminar remotamente:', error);
     }

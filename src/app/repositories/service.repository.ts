@@ -19,12 +19,15 @@ export class ServicesRepository {
     this.db = new LocalDatabase<Service>('AppDB', 'services');
     this.initialized = this.db.init();
     this.apiModel = new ApiModel<Service>(http);
-    this.syncWithRemote();
   }
 
   getAvailableServices(): Observable<Service[]> {
-    return from(this.db.getAll()).pipe(
-      map((services: Service[]) => services.filter(service => service.available === 'disponible'))
+    return this.apiModel.getAll(this.type).pipe(
+      map((response: any) => {
+        return response.data
+          .map((remote: any) => mapRemoteToLocalService(remote))
+          .filter((service: Service) => service.available === 'disponible');
+      })
     );
   }
 
@@ -37,28 +40,15 @@ export class ServicesRepository {
     );
   }
 
-  async syncWithRemote(): Promise<void> {
-    try {
-        const remoteData = await lastValueFrom(this.apiModel.getAll(this.type));
-        const formattedData = remoteData.data.map((remote: any) => mapRemoteToLocalService(remote));
-        await this.db.insertAll(formattedData);
-        console.log(`Database synchronized with remote data for ${this.type}`);
-    } catch (error) {
-        console.error("Error synchronizing with remote data:", error);
-    }
-  }
-
-
   async addService(service: Service): Promise<void> {
     const payload = mapLocalToRemoteService(service);
   
     try {
-      await lastValueFrom(this.apiModel.add(payload, this.type));
+      const response = await lastValueFrom(this.apiModel.add(payload, this.type));
+      service.id = response.data.id
     } catch (error) {
       console.error("Error al añadir el servicio remotamente:", error);
     }
-  
-    await this.db.add(service);
   }
 
 
@@ -78,28 +68,19 @@ export class ServicesRepository {
     const payload = mapLocalToRemoteService(service);
 
     try {
-      const response = await lastValueFrom(this.apiModel.getById(this.type, service.id));
-      const strapiId = response.data[0]?.id;
-      if (strapiId) {
-        await lastValueFrom(this.apiModel.update(strapiId, payload, this.type));
-      }
+      await lastValueFrom(this.apiModel.update(service.id, payload, this.type));
     } catch (error) {
       console.error('Error al actualizar el servicio remotamente:', error);
     }
 
     await this.db.update(service);
   }
+  
   async deleteService(id: string): Promise<void> {
     try {
-      const response = await lastValueFrom(this.apiModel.getById(this.type, id));
-      const strapiId = response.data[0]?.id;
-      if (strapiId) {
-        await lastValueFrom(this.apiModel.delete(strapiId, this.type));
-      }
+        await lastValueFrom(this.apiModel.delete(id, this.type));
     } catch (error) {
       console.error("Error al eliminar remotamente:", error);
     }
-  
-    await this.db.delete(id);
   }
 }

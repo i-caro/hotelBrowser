@@ -3,9 +3,19 @@ import { BehaviorSubject } from 'rxjs';
 import { User } from '../model/user.model';
 import { UsersRepository } from '../repositories/users.repository';
 
+async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
   private readonly USERS_KEY = 'app_users';
   private readonly LOGGED_IN_USER_KEY = 'logged_in_user';
@@ -15,18 +25,15 @@ export class AuthService {
   constructor(private usersRepository: UsersRepository) {
   }
 
-
   async register(name: string, surname: string, password: string, email: string, phone: string, imgUrl: string): Promise<boolean> {
-    const existingUsers = await this.usersRepository.getUsuarios();
-    if (existingUsers.some(user => user.name === name)) {
-      return false;
-    }
 
-    const newUser: User = {
+    const hashedPassword = await hashPassword(password)
+
+    const newUser = {
       id: this.generateHexId(8),
       name,
       surname,
-      password,
+      password: hashedPassword,
       email,
       phone,
       imgUrl
@@ -36,7 +43,7 @@ export class AuthService {
       await this.usersRepository.addUsuario(newUser);
       return true;
     } catch (error) {
-      console.error('Error al registrar el usuario:', error);
+      console.error('Error registering user:', error);
       return false;
     }
   }
@@ -51,23 +58,24 @@ export class AuthService {
   }
 
 
-  async login(username: string, password: string): Promise<boolean> {
+  async login(name: string, password: string): Promise<boolean> {
+
+    const hashed = await hashPassword(password)
+
     try {
       const users = await this.usersRepository.getUsuarios();
-      
-      const user = users.find((u) => u.name === username && u.password === password);
   
-      if (user) {
-        const token = this.generateHexId(16)
+      const user = users.find((u) => u.name === name);
+  
+      if (user && user.password === hashed) {
         localStorage.setItem(this.LOGGED_IN_USER_KEY, JSON.stringify(user));
-        localStorage.setItem(this.TOKEN_KEY, token)
-        this.authStatus.next(true);
         return true;
       }
   
+      console.warn('Credenciales incorrectas');
       return false;
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
+      console.error('Error during login:', error);
       return false;
     }
   }
@@ -79,7 +87,7 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    const token = localStorage.getItem(this.TOKEN_KEY)
+    const token = localStorage.getItem(this.LOGGED_IN_USER_KEY)
     return !!token
   }
 

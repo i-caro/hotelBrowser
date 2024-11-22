@@ -3,7 +3,7 @@ import { User } from '../model/user.model';
 export const mapRemoteToLocalUser = (remoteData: any): User => {
   const attributes = remoteData.attributes || {};
   return {
-    id: '',
+    id: remoteData.id,
     name: attributes.name || '',
     surname: attributes.surname || '',
     password: attributes.password || '',

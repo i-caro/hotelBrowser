@@ -26,7 +26,7 @@ export class BookingsPage implements OnInit {
   ) {
     this.bookingForm = this.fb.group({
       serviceId: ["", Validators.required], 
-      userId: ["", Validators.required], 
+      userId: [""], 
       startDate: ["", Validators.required],
       endDate: ["", Validators.required],
       peopleAmount: ["", Validators.required],
@@ -54,7 +54,6 @@ export class BookingsPage implements OnInit {
     const user = await this.authService.getAuthenticatedUser();
     if (this.bookingForm.valid) {
       const nuevaReserva: Booking = {
-        id: this.generateHexId(8),
         ...this.bookingForm.value,
         userId: user?.id
       };
@@ -90,14 +89,5 @@ export class BookingsPage implements OnInit {
   async eliminarReserva(id: string) {
     await this.bookingsRepository.deleteReserva(id);
     this.cargarReservas();
-  }
-
-  generateHexId(length: number): string {
-    const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
   }
 }

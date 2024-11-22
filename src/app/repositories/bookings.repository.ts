@@ -19,18 +19,6 @@ export class BookingsRepository {
     this.db = new LocalDatabase<Booking>('AppDB', 'bookings');
     this.initialized = this.db.init();
     this.apiModel = new ApiModel<Booking>(http);
-    this.syncWithRemote();
-  }
-
-  async syncWithRemote(): Promise<void> {
-    try {
-        const remoteData = await lastValueFrom(this.apiModel.getAll(this.type));
-        const formattedData = remoteData.data.map((remote: any) => mapRemoteToLocalBooking(remote));
-        await this.db.insertAll(formattedData);
-        console.log(`Database synchronized with remote data for ${this.type}`);
-    } catch (error) {
-        console.error("Error synchronizing with remote data:", error);
-    }
   }
 
   async addReserva(booking: Booking): Promise<void> {
@@ -41,8 +29,6 @@ export class BookingsRepository {
     } catch (error) {
       console.error('Error al añadir la reserva remotamente:', error);
     }
-
-    await this.db.add(booking);
   }
 
   async getReservas(): Promise<Booking[]> {
@@ -61,11 +47,7 @@ export class BookingsRepository {
     const payload = mapLocalToRemoteBooking(booking);
 
     try {
-      const response = await lastValueFrom(this.apiModel.getById(this.type, booking.id));
-      const strapiId = response.data[0]?.id;
-      if (strapiId) {
-        await lastValueFrom(this.apiModel.update(strapiId, payload, this.type));
-      }
+        await lastValueFrom(this.apiModel.update(booking.id, payload, this.type));
     } catch (error) {
       console.error('Error al actualizar la reserva remotamente:', error);
     }
@@ -75,11 +57,7 @@ export class BookingsRepository {
 
   async deleteReserva(id: string): Promise<void> {
     try {
-      const response = await lastValueFrom(this.apiModel.getById(this.type, id));
-      const strapiId = response.data[0]?.id;
-      if (strapiId) {
-        await lastValueFrom(this.apiModel.delete(strapiId, this.type));
-      }
+        await lastValueFrom(this.apiModel.delete(id, this.type));
     } catch (error) {
       console.error('Error al eliminar remotamente:', error);
     }
