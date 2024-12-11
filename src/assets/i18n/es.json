@@ -44,5 +44,6 @@
     "BOOKED": "Reservado",
     "REGISTERED_USERS": "Usuarios Registrados",
     "LOGOUT": "Cerrar sesión",
-    "LANGUAGE": "Idioma"
+    "LANGUAGE": "Idioma",
+    "IMGURL": "../assets/imagenes/malaga.jpg"
 }

@@ -1,4 +1,5 @@
 <ion-app>
+  <img src="{{'IMGURL' | translate}}" alt="">
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay" *ngIf="isAuthenticated">
       <ion-content>
@@ -16,6 +17,7 @@
             <ion-select-option value="en">English</ion-select-option>
             <ion-select-option value="es">Español</ion-select-option>
             <ion-select-option value="gr">Deutsch</ion-select-option>
+            <ion-select-option value="ind">हिंदू</ion-select-option>
           </ion-select>
         </ion-item>
         </ion-list>
@@ -27,7 +29,7 @@
     <div *ngIf="!isAuthenticated" class="overlay">
       <div class="auth-card">
         <form [formGroup]="authForm" (ngSubmit)="onAuthSubmit()">
-          <h2>{{ isRegisterMode ? 'Registro' : 'Iniciar Sesión' }}</h2>
+          <h2>{{ isRegisterMode ? ('REGISTER' | translate) : ('LOGIN' | translate) }}</h2>
 
           <ion-item>
             <ion-label position="floating">{{'FIRST_NAME' | translate}}</ion-label>

@@ -44,5 +44,6 @@
     "BOOKED": "Reserviert",
     "REGISTERED_USERS": "Registrierte Benutzer",
     "LOGOUT": "Abmelden",
-    "LANGUAGE": "Sprache"
+    "LANGUAGE": "Sprache",
+    "IMGURL": ""
 }
