@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Usuarios Registrados</ion-title>
+    <ion-title>{{ 'REGISTERED_USERS' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -16,13 +16,15 @@
             <ion-card-title>{{ user.name }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <p><strong>Apellidos:</strong> {{ user.surname }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Contraseña:</strong> {{ user.password }}</p>
-            <p><strong>Teléfono:</strong> {{ user.phone }}</p>
+            <p><strong>{{ 'LAST_NAME' | translate }}:</strong> {{ user.surname }}</p>
+            <p><strong>{{ 'EMAIL' | translate }}:</strong> {{ user.email }}</p>
+            <p><strong>{{ 'PASSWORD' | translate }}:</strong> {{ user.password }}</p>
+            <p><strong>{{ 'PHONE' | translate }}:</strong> {{ user.phone }}</p>
             <p><strong>ID:</strong> {{ user.id }}</p>
           </ion-card-content>
-          <ion-button color="danger" expand="block" (click)="eliminarUsuario(user.id)">Eliminar Usuario</ion-button>
+          <ion-button color="danger" expand="block" (click)="eliminarUsuario(user.id)">
+            {{ 'DELETE_USER' | translate }}
+          </ion-button>
         </ion-card>
       </ion-col>
     </ion-row>

@@ -6,9 +6,18 @@
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
             <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
               <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
+              <ion-label>{{ p.title | translate }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-item>
+            <ion-icon slot="start" name="language-outline"></ion-icon>
+            <ion-label>{{'LANGUAGE' | translate}}</ion-label>
+          <ion-select (ionChange)="changeLanguage($event.detail.value)">
+            <ion-select-option value="en">English</ion-select-option>
+            <ion-select-option value="es">Español</ion-select-option>
+            <ion-select-option value="gr">Deutsch</ion-select-option>
+          </ion-select>
+        </ion-item>
         </ion-list>
       </ion-content>
     </ion-menu>
@@ -21,34 +30,34 @@
           <h2>{{ isRegisterMode ? 'Registro' : 'Iniciar Sesión' }}</h2>
 
           <ion-item>
-            <ion-label position="floating">Nombre de usuario</ion-label>
+            <ion-label position="floating">{{'FIRST_NAME' | translate}}</ion-label>
             <ion-input formControlName="username" type="text"></ion-input>
           </ion-item>
 
           <ion-item *ngIf="isRegisterMode">
-            <ion-label position="floating">Apellido</ion-label>
+            <ion-label position="floating">{{'LAST_NAME' | translate}}</ion-label>
             <ion-input formControlName="surname" type="text"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="floating">Contraseña</ion-label>
+            <ion-label position="floating">{{'PASSWORD' | translate}}</ion-label>
             <ion-input formControlName="password" type="password"></ion-input>
           </ion-item>
 
           <ion-item *ngIf="isRegisterMode">
-            <ion-label position="floating">Correo electrónico</ion-label>
+            <ion-label position="floating">{{'EMAIL' | translate}}</ion-label>
             <ion-input formControlName="email" type="email"></ion-input>
           </ion-item>
 
           <ion-item *ngIf="isRegisterMode">
-            <ion-label position="floating">Teléfono</ion-label>
+            <ion-label position="floating">{{'PHONE' | translate}}</ion-label>
             <ion-input formControlName="phone" type="text"></ion-input>
           </ion-item>
 
-          <ion-button expand="block" type="submit">{{ isRegisterMode ? 'Registrarse' : 'Iniciar Sesión' }}</ion-button>
+          <ion-button expand="block" type="submit">{{ isRegisterMode ? ('REGISTER' | translate) : ('LOGIN' | translate) }}</ion-button>
 
           <p (click)="toggleAuthMode()" class="toggle-link">
-            {{ isRegisterMode ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate' }}
+            {{ isRegisterMode ? ('HAS_ACCOUNT' | translate) : ('NO_ACCOUNT' | translate) }}
           </p>
         </form>
       </div>

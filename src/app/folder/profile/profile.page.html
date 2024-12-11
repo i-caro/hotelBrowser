@@ -1,19 +1,19 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Perfil</ion-title>
+    <ion-title>{{'PROFILE' | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Información del Perfil</ion-card-title>
+      <ion-card-title>{{'PROFILE_INFO' | translate}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p><strong>Nombre de usuario:</strong> {{ userName }}</p>
-      <p><strong>Correo electrónico:</strong> {{ userEmail }}</p>
+      <p><strong>{{'FIRST_NAME' | translate}}:</strong> {{ userName }}</p>
+      <p><strong>{{'EMAIL' | translate}}:</strong> {{ userEmail }}</p>
     </ion-card-content>
   </ion-card>
 
-  <ion-button expand="block" color="danger" (click)="logout()">Cerrar Sesión</ion-button>
+  <ion-button expand="block" color="danger" (click)="logout()">{{'LOGOUT' | translate}}</ion-button>
 </ion-content>

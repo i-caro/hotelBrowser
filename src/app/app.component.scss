@@ -1,64 +1,144 @@
+// Definición de la paleta de colores para modo oscuro
+:root {
+  --ion-background-color: #121212;  // Fondo oscuro para todo
+  --ion-text-color: #f4f4f4;  // Texto claro para el modo oscuro
+  --ion-header-background: #004d32;  // Verde oscuro para el encabezado
+  --ion-button-color: #ffffff;  // Texto de los botones en blanco
+  --ion-button-background: #4dd35e;  // Verde más claro para los botones
+  --ion-item-background: #1f1f1f;  // Fondo de los items más oscuro
+  --ion-menu-background: #1c3d28;  // Verde oscuro para el menú
+  --ion-icon-color: #ffffff;  // Iconos blancos en el menú
+  --ion-border-color: #204620;  // Bordes más suaves y oscuros
+  
+  // Colores complementarios
+  --accent-color: #f39c12;  // Naranja/dorado para destacar
+  --secondary-color: #27ae60;  // Verde menta para un contraste fresco
+  --tertiary-color: #8e44ad;  // Púrpura para acentos adicionales
+
+  // Colores para elementos de texto
+  --ion-label-color: #f4f4f4;  // Texto claro en los labels
+}
+
+// Menu styles
+ion-menu {
+  --background: var(--ion-menu-background);
+  --width: 250px;
+}
+
+ion-item {
+  --background: var(--ion-item-background);
+  --color: var(--ion-text-color);
+  --border-color: var(--ion-border-color);
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+ion-item:hover {
+  background-color: var(--secondary-color);
+  color: #fff;
+}
+
+ion-icon {
+  color: var(--ion-icon-color);
+  margin-right: 10px;
+}
+
+ion-label {
+  color: var(--ion-label-color);
+}
+
+// Auth form styles
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);  // Fondo oscuro más opaco
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
 }
 
 .auth-card {
-  background-color: #ffffff;
+  background-color: #456140;  // Fondo oscuro para el formulario
   padding: 20px;
-  border-radius: 12px;
-  width: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 100%;
   max-width: 400px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
 }
 
-.auth-card h2 {
-  margin-bottom: 16px;
-  color: #4A90E2;
+h2 {
+  color: var(--ion-text-color);
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+ion-item {
+  --padding-start: 15px;
+  --padding-end: 15px;
+}
+
+ion-input {
+  font-size: 1rem;
+  color: var(--ion-text-color);
+}
+
+ion-button {
+  background-color: var(--accent-color);
+  color: var(--ion-button-color);
+  border-radius: 5px;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  margin-top: 15px;
+}
+
+ion-button:hover {
+  background-color: #3f76eb;  // Naranja más oscuro al hacer hover
 }
 
 .toggle-link {
-  color: #4A90E2;
-  cursor: pointer;
+  text-align: center;
   margin-top: 10px;
+  color: var(--ion-text-color);
+  cursor: pointer;
+  text-decoration: underline;
 }
 
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+.toggle-link:hover {
+  color: var(--accent-color);
 }
 
-.spinner {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid white;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
+// Language select styles
+ion-select {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+ion-select-option {
+  font-size: 1rem;
+  color: var(--ion-text-color);
+}
+
+ion-header {
+  background: var(--ion-header-background);
+  color: white;
+  padding: 10px;
+}
+
+ion-header h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+}
+
+ion-content {
+  padding: 20px;
 }

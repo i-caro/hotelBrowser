@@ -2,6 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from './autenticacion/auth.service';
+import { TranslationService } from './translation/translate.service';
 
 @Component({
   selector: 'app-root',
@@ -16,11 +17,11 @@ export class AppComponent implements OnInit {
   userEmail = '';
 
   public appPages = [
-    { title: 'Perfil', url: '/folder/profile', icon: 'person' },
-    { title: 'Servicios', url: '/folder/services', icon: 'bed' },
-    { title: 'Reservas', url: '/folder/bookings', icon: 'book' },
-    { title: 'Usuarios', url: '/folder/users', icon: 'people' },
-    { title: 'Mapa', url: '/folder/map', icon: 'location' },
+    { title: 'PROFILE', url: '/folder/profile', icon: 'person' },
+    { title: 'SERVICES', url: '/folder/services', icon: 'bed' },
+    { title: 'RESERVATION', url: '/folder/bookings', icon: 'book' },
+    { title: 'USERS', url: '/folder/users', icon: 'people' },
+    { title: 'MAP', url: '/folder/map', icon: 'location' },
   ];
 
   constructor(
@@ -28,6 +29,7 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private ngZone: NgZone,
+    private translationService: TranslationService
   ) {}
 
   async ngOnInit() {
@@ -94,5 +96,9 @@ export class AppComponent implements OnInit {
   toggleAuthMode() {
     this.isRegisterMode = !this.isRegisterMode;
     this.authForm.reset();
+  }
+
+  changeLanguage(lang: string) {
+    this.translationService.setLanguage(lang);
   }
 }

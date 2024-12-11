@@ -8,6 +8,7 @@ import { MapPageRoutingModule } from './map-routing.module';
 
 import { MapPage } from './map.page';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { GoogleMapsModule } from '@angular/google-maps';
     FormsModule,
     IonicModule,
     MapPageRoutingModule,
-    GoogleMapsModule
+    GoogleMapsModule,
+    TranslateModule.forChild()
   ],
   declarations: [MapPage]
 })

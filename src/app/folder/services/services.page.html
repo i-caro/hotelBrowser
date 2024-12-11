@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Servicios</ion-title>
+    <ion-title>{{'SERVICES' | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -15,38 +15,38 @@
   <!-- Formulario en una tarjeta centrada -->
   <ion-card *ngIf="mostrarFormulario" class="formulario-card">
     <ion-card-header>
-      <ion-card-title>Añadir Servicio</ion-card-title>
+      <ion-card-title>{{'CREATE_SERVICE' | translate}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <form (ngSubmit)="agregarServicio()" [formGroup]="servicioForm">
         <ion-item>
-          <ion-label position="floating">Nombre del Servicio</ion-label>
+          <ion-label position="floating">{{ 'SERVICE_NAME' | translate }}</ion-label>
           <ion-input formControlName="name"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Tipo de Servicio</ion-label>
+          <ion-label position="floating">{{ 'SERVICE_TYPE' | translate }}</ion-label>
           <ion-input formControlName="type"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Descripción</ion-label>
+          <ion-label position="floating">{{ 'DESCRIPTION' | translate }}</ion-label>
           <ion-input formControlName="description"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Ubicación</ion-label>
+          <ion-label position="floating">{{ 'LOCATION' | translate }}</ion-label>
           <ion-input formControlName="location"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Precio</ion-label>
+          <ion-label position="floating">{{ 'PRICE' | translate }}</ion-label>
           <ion-input type="number" formControlName="price"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Disponibilidad</ion-label>
-          <ion-select formControlName="available" placeholder="Selecciona una opción">
-            <ion-select-option value="disponible">Disponible</ion-select-option>
-            <ion-select-option value="reservado">Reservado</ion-select-option>
+          <ion-label position="floating">{{ 'AVAILABILITY' | translate }}</ion-label>
+          <ion-select formControlName="available" placeholder="{{ 'AVAILABILITY' | translate }}">
+            <ion-select-option value="disponible">{{ 'AVAILABLE' | translate }}</ion-select-option>
+            <ion-select-option value="reservado">{{ 'BOOKED' | translate }}</ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-button expand="full" type="submit" [disabled]="servicioForm.invalid">Guardar Servicio</ion-button>
+        <ion-button expand="full" type="submit" [disabled]="servicioForm.invalid">{{'CREATE_SERVICE' | translate}}</ion-button>
       </form>
     </ion-card-content>
   </ion-card>
@@ -59,14 +59,14 @@
       <ion-card-title>{{ servicio.name }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p>Tipo: {{ servicio.type }}</p>
-      <p>Descripción: {{ servicio.description }}</p>
-      <p>Ubicación: {{ servicio.location }}</p>
-      <p>Precio: {{ servicio.price }}</p>
-      <p>Disponibilidad: {{ servicio.available=="disponible"?"Disponible":"Reservado" }}</p>
+      <p>{{ 'SERVICE_TYPE' | translate }}: {{ servicio.type }}</p>
+      <p>{{ 'DESCRIPTION' | translate }}: {{ servicio.description }}</p>
+      <p>{{ 'LOCATION' | translate }}: {{ servicio.location }}</p>
+      <p>{{ 'PRICE' | translate }}: {{ servicio.price }}</p>
+      <p>{{ 'AVAILABILITY' | translate }}: {{ servicio.available=="disponible"?"Disponible":"Reservado" }}</p>
       <p>ID: {{ servicio.id }}</p>
     </ion-card-content>
-    <ion-button color="danger" (click)="eliminarServicio(servicio.id)">Eliminar</ion-button>
+    <ion-button color="danger" (click)="eliminarServicio(servicio.id)">{{'DELETE_SERVICE' | translate}}</ion-button>
     </ion-card>
   </div>
 </ion-content>
