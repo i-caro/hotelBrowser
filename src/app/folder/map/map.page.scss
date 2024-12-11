@@ -1,23 +1,33 @@
+/* CSS para los pines en el mapa */
 .map-container {
-  height: 100%;
+  position: relative;
   width: 100%;
+  height: 100%;
+}
+
+/* Estilo para los labels de los markers */
+.google-map .map-marker {
   position: relative;
 }
 
-.google-map {
-  height: 100%;
-  width: 100%;
+/* Estilo para el texto dentro de los pines */
+.google-map .map-marker .label {
+  font-size: 0.75rem;  /* Tamaño más pequeño para el precio */
+  font-weight: bold;
+  color: white;  /* Aseguramos que el texto sea legible */
+  text-align: center;
+  line-height: 1.2;  /* Alineación vertical */
+  border-radius: 50%;  /* Hacemos que el label tenga forma redondeada */
+  background-color: rgba(0, 0, 0, 0.7);  /* Fondo oscuro con transparencia */
+  padding: 0.25rem;  /* Espaciado dentro del label */
+  width: 2.5rem;  /* Ancho fijo para el pin */
+  height: 2.5rem;  /* Alto fijo para el pin */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.map-info-window {
-  h5 {
-    color: #2f855a;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-
-  p {
-    color: #4a5568;
-    margin: 0;
-  }
+/* Estilo para mejorar la visibilidad si se necesita un borde */
+.google-map .map-marker .label {
+  border: 2px solid #ffffff;  /* Borde blanco para resaltar */
 }

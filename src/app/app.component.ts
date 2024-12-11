@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   public appPages = [
     { title: 'PROFILE', url: '/folder/profile', icon: 'person' },
     { title: 'SERVICES', url: '/folder/services', icon: 'bed' },
-    { title: 'RESERVATION', url: '/folder/bookings', icon: 'book' },
+    { title: 'RESERVATIONS', url: '/folder/bookings', icon: 'book' },
     { title: 'USERS', url: '/folder/users', icon: 'people' },
     { title: 'MAP', url: '/folder/map', icon: 'location' },
   ];

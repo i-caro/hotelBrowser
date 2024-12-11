@@ -22,16 +22,16 @@
 // Menu styles
 ion-menu {
   --background: var(--ion-menu-background);
-  --width: 250px;
+  --width: 20rem;  // 250px convertido a rem (1rem = 16px)
 }
 
 ion-item {
   --background: var(--ion-item-background);
   --color: var(--ion-text-color);
   --border-color: var(--ion-border-color);
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 8px;
+  margin: 0.625rem 0;  // 10px convertido a rem
+  padding: 0.625rem;  // 10px convertido a rem
+  border-radius: 0.5rem;  // 8px convertido a rem
   transition: all 0.3s ease;
 }
 
@@ -42,7 +42,7 @@ ion-item:hover {
 
 ion-icon {
   color: var(--ion-icon-color);
-  margin-right: 10px;
+  margin-right: 0.625rem;  // 10px convertido a rem
 }
 
 ion-label {
@@ -64,23 +64,23 @@ ion-label {
 
 .auth-card {
   background-color: #456140;  // Fondo oscuro para el formulario
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  padding: 1.25rem;  // 20px convertido a rem
+  border-radius: 0.625rem;  // 10px convertido a rem
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3);  // 4px 8px convertido a rem
   width: 100%;
-  max-width: 400px;
+  max-width: 25rem;  // 400px convertido a rem
 }
 
 h2 {
   color: var(--ion-text-color);
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;  // 20px convertido a rem
   font-size: 1.5rem;
 }
 
 ion-item {
-  --padding-start: 15px;
-  --padding-end: 15px;
+  --padding-start: 1rem;  // 15px convertido a rem
+  --padding-end: 1rem;  // 15px convertido a rem
 }
 
 ion-input {
@@ -91,11 +91,11 @@ ion-input {
 ion-button {
   background-color: var(--accent-color);
   color: var(--ion-button-color);
-  border-radius: 5px;
-  padding: 10px;
+  border-radius: 0.3125rem;  // 5px convertido a rem
+  padding: 0.625rem;  // 10px convertido a rem
   transition: background-color 0.3s ease;
   width: 100%;
-  margin-top: 15px;
+  margin-top: 1rem;  // 15px convertido a rem
 }
 
 ion-button:hover {
@@ -104,7 +104,7 @@ ion-button:hover {
 
 .toggle-link {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 0.625rem;  // 10px convertido a rem
   color: var(--ion-text-color);
   cursor: pointer;
   text-decoration: underline;
@@ -129,7 +129,7 @@ ion-select-option {
 ion-header {
   background: var(--ion-header-background);
   color: white;
-  padding: 10px;
+  padding: 0.625rem;  // 10px convertido a rem
 }
 
 ion-header h1 {
@@ -140,5 +140,5 @@ ion-header h1 {
 }
 
 ion-content {
-  padding: 20px;
+  padding: 1.25rem;  // 20px convertido a rem
 }

@@ -36,7 +36,7 @@ export class MapPage implements OnInit {
 
         this.markers.push({
           position: { lat: coords.lat, lng: coords.lng },
-          label: `${service.price}€`,
+          label: `${(service.type).charAt(0).toUpperCase()}`,
         });
       } catch (error) {
         console.error(`Error obteniendo coordenadas para ${service.name}:`, error);
