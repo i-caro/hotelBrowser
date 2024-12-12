@@ -31,3 +31,17 @@
 .google-map .map-marker .label {
   border: 2px solid #ffffff;  /* Borde blanco para resaltar */
 }
+
+ion-menu {
+  display: none; /* Oculta el menú por defecto */
+
+  @media (max-width: 768px) {
+    display: block; /* Muestra el menú en pantallas pequeñas */
+  }
+}
+
+ion-menu-button {
+  @media (min-width: 769px) {
+    display: none; /* Oculta el botón de menú en pantallas grandes */
+  }
+}

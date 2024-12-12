@@ -13,12 +13,23 @@ export class UsersPage implements OnInit {
 
   constructor(
     private usersRepository: UsersRepository,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
+
+
+  public appPages = [
+    { title: 'PROFILE', url: '/folder/profile', icon: 'person' },
+    { title: 'SERVICES', url: '/folder/services', icon: 'bed' },
+    { title: 'RESERVATIONS', url: '/folder/bookings', icon: 'book' },
+    { title: 'USERS', url: '/folder/users', icon: 'people' },
+    { title: 'MAP', url: '/folder/map', icon: 'location' },
+  ];
+
 
   async ngOnInit() {
     this.users = await this.usersRepository.getUsuarios();
   }
+
 
   async eliminarUsuario(userId: string) {
     const authenticatedUser = await this.authService.getAuthenticatedUser();

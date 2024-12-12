@@ -1,0 +1,55 @@
+ion-content {
+    --background: #004d32; /* Fondo verde oscuro */
+  }
+  
+  ion-grid {
+    padding: 1rem;
+  }
+  
+  ion-card {
+    background: #1c6b47; /* Fondo verde más claro */
+    color: var(--ion-text-color);
+    border-radius: 0.625rem; /* Bordes redondeados */
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3); /* Sombras suaves */
+  }
+  
+  ion-avatar {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 0.5rem; /* Centra el avatar */
+  }
+  
+  ion-card-title {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+  
+  ion-card-content p {
+    margin: 0.5rem 0; /* Espaciado entre párrafos */
+    font-size: 1rem;
+  }
+  
+  ion-button {
+    margin-top: 1rem; /* Espaciado superior */
+    font-size: 1rem;
+    background-color: var(--accent-color); /* Botón naranja */
+    color: var(--ion-button-color);
+  }
+  
+  ion-button:hover {
+    background-color: #e67e22; /* Naranja más oscuro */
+  }
+
+  ion-menu {
+    display: none; /* Oculta el menú por defecto */
+  
+    @media (max-width: 768px) {
+      display: block; /* Muestra el menú en pantallas pequeñas */
+    }
+  }
+  
+  ion-menu-button {
+    @media (min-width: 769px) {
+      display: none; /* Oculta el botón de menú en pantallas grandes */
+    }
+  }

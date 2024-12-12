@@ -86,7 +86,7 @@ export class AppComponent implements OnInit {
           this.userEmail = user?.email || '';
           location.reload();
         });
-        this.router.navigate(['/folder']);
+        this.router.navigate(['/folder/profile']);
       } else {
         alert('Credenciales incorrectas');
       }

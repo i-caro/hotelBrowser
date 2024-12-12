@@ -1,0 +1,83 @@
+/* Fondo general de la página */
+ion-content {
+    --background: #004d32; /* Verde oscuro como fondo principal */
+  }
+  
+  /* Fondo de las tarjetas */
+  .reserva-card, 
+  .reserva-form-card {
+    background: #1c6b47; /* Verde más claro para destacar sobre el fondo oscuro */
+    color: var(--ion-text-color);
+    border-radius: 0.625rem; /* Bordes redondeados */
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3); /* Sombras suaves */
+  }
+  
+  /* Tarjetas de reservas */
+  .reserva-card {
+    width: 100%;
+    max-width: 20rem; /* Ancho máximo para las tarjetas */
+    margin: 1rem; /* Separación entre tarjetas */
+  }
+  
+  .reserva-card p {
+    margin: 0.5rem 0; /* Espaciado entre párrafos */
+    font-size: 0.9rem;
+  }
+  
+  .reserva-card ion-button {
+    margin-top: 0.5rem; /* Espaciado arriba */
+  }
+  
+  /* Formulario de Reservas */
+  .reserva-form-card {
+    margin: 1rem auto;
+    padding: 1.5rem; /* Espaciado interno */
+    width: 90%;
+  }
+  
+  /* Botón flotante (FAB) */
+  ion-fab-button {
+    background: #1c6b47; /* Verde más claro */
+    color: var(--ion-button-color);
+  }
+  
+  ion-fab-button:hover {
+    background: #2e8b57; /* Verde aún más oscuro */
+  }
+  
+  /* Botones de acción */
+  ion-button {
+    font-size: 1rem;
+    background-color: var(--accent-color); /* Color de acento para botones */
+    color: var(--ion-button-color);
+    border-radius: 0.3125rem; /* Bordes redondeados para botones */
+  }
+  
+  ion-button:hover {
+    background-color: #e67e22; /* Naranja más oscuro */
+  }
+  
+  /* Contenedor de las tarjetas */
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; /* Espaciado entre tarjetas */
+    padding: 1rem;
+    justify-content: center;
+  }
+
+  ion-menu {
+    display: none; /* Oculta el menú por defecto */
+  
+    @media (max-width: 768px) {
+      display: block; /* Muestra el menú en pantallas pequeñas */
+    }
+  }
+  
+  ion-menu-button {
+    @media (min-width: 769px) {
+      display: none; /* Oculta el botón de menú en pantallas grandes */
+    }
+}
+  
+  
