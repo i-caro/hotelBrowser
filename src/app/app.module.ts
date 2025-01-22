@@ -11,6 +11,9 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { environment } from 'src/environments/environment';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -23,6 +26,8 @@ export function createTranslateLoader(http: HttpClient) {
      IonicModule.forRoot(),
       AppRoutingModule,
        ReactiveFormsModule,
+       AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
         GoogleMapsModule,
         TranslateModule.forRoot({
           loader: {

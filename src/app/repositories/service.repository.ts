@@ -5,6 +5,7 @@ import { from, lastValueFrom, map, Observable, switchMap } from 'rxjs';
 import { mapLocalToRemoteService, mapRemoteToLocalService } from '../mappings/service-mapper';
 import { ApiModel } from '../strapi/api-model';
 import { HttpClient } from '@angular/common/http';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class ServicesRepository {
   private initialized: Promise<void>;
   private apiModel: ApiModel<Service>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private firestore: AngularFirestore) {
     this.db = new LocalDatabase<Service>('AppDB', 'services');
     this.initialized = this.db.init();
     this.apiModel = new ApiModel<Service>(http);
@@ -42,6 +43,13 @@ export class ServicesRepository {
 
   async addService(service: Service): Promise<void> {
     const payload = mapLocalToRemoteService(service);
+
+    try {
+      const docRef = await this.firestore.collection(this.type).add(payload);
+      service.id = docRef.id;
+    } catch (error) {
+      console.warn('Error al agregar en Firebase, intentando con Strapi:', error);
+    }
   
     try {
       const response = await lastValueFrom(this.apiModel.add(payload, this.type));

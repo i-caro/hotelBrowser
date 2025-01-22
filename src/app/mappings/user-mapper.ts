@@ -25,3 +25,27 @@ export const mapLocalToRemoteUser = (localData: User): any => {
     },
   };
 };
+
+export function mapLocalToFirebaseService(localData: User): any {
+  return {
+    id: localData.id,
+    name: localData.name,
+    surname: localData.surname,
+    password: localData.password,
+    email: localData.email,
+    phone: localData.phone,
+    imgUrl: localData.imgUrl,
+  };
+};
+
+export function mapFirebaseToLocalService(firebaseData: any): User {
+  return {
+    id: firebaseData.id,
+    name: firebaseData.name,
+    surname: firebaseData.surname,
+    password: firebaseData.password,
+    email: firebaseData.email,
+    phone: firebaseData.phone,
+    imgUrl: firebaseData.imgUrl,
+  };
+}

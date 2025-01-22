@@ -4,6 +4,9 @@ import { Service } from 'src/app/model/service.model';
 import { ServicesRepository } from 'src/app/repositories/service.repository';
 import { GeocodingService } from './geocoding.service';
 import { lastValueFrom } from 'rxjs';
+import { mapFirebaseToLocalService, mapLocalToRemoteService } from 'src/app/mappings/service-mapper';
+import { FirestoreService } from 'src/app/firebase/firestore.service';
+import { mapLocalToFirebaseService } from 'src/app/mappings/user-mapper';
 
 @Component({
   selector: 'app-servicios',
@@ -18,7 +21,8 @@ export class ServicesPage implements OnInit {
   constructor(
     private fb: FormBuilder,
     private serviciosRepository: ServicesRepository,
-    private geocodingService: GeocodingService
+    private geocodingService: GeocodingService,
+    private firestore: FirestoreService
   ) {
     this.servicioForm = this.fb.group({
       name: ["", Validators.required],
@@ -35,11 +39,33 @@ export class ServicesPage implements OnInit {
   }
 
   async cargarServicios() {
+    let success = true;
     try {
-      this.servicios = await this.serviciosRepository.getServices();
-      console.log("Servicios cargados:", this.servicios);
+      let sv: Service;
+      const snapshot = await lastValueFrom(this.firestore.getCollection('services'));
+        this.servicios = snapshot.map(doc => {
+          const data = doc.data();
+          if (typeof data === 'object' && data !== null) {
+            return mapFirebaseToLocalService({ id: doc.id, ...data });
+          } else {
+            console.warn(`Los datos del documento con ID ${doc.id} no son válidos:`, data);
+            return sv;
+          }
+        });
+  
+      console.log('Servicios cargados desde Firebase:', this.servicios);
     } catch (error) {
-      console.error("Error al cargar los servicios:", error);
+      console.error("Error al cargar desde firebase, intentado con strapi: ", error)
+      success = false;
+    }
+
+    if(!success){
+      try {
+        this.servicios = await this.serviciosRepository.getServices();
+        console.log("Servicios cargados:", this.servicios);
+      } catch (error) {
+        console.error("Error al cargar los servicios:", error);
+      }
     }
   }
 
@@ -54,7 +80,8 @@ export class ServicesPage implements OnInit {
   
         nuevoServicio.latitud = coords.lat;
         nuevoServicio.longitud = coords.lng;
-  
+        
+        await this.firestore.addDocument('services', mapLocalToRemoteService(nuevoServicio))
         await this.serviciosRepository.addService(nuevoServicio);
         
         await this.cargarServicios();
